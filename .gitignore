@@ -1,0 +1,31 @@
+# Local .terraform directories
+**/.terraform/*
+
+# Terraform state files — contain secrets/resource details, never commit
+*.tfstate
+*.tfstate.*
+terraform.tfstate.d/
+
+# Crash log files
+crash.log
+crash.*.log
+
+# Plan output files (binary, environment-specific)
+*.tfplan
+tfplan
+
+# Ignore override files (local dev overrides)
+override.tf
+override.tf.json
+*_override.tf
+*_override.tf.json
+
+# Lock file — actually DO track this one, see note below
+# .terraform.lock.hcl
+
+# CLI config that may contain credentials
+.terraformrc
+terraform.rc
+
+# macOS junk
+.DS_Store
