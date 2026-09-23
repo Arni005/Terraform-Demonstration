@@ -15,7 +15,11 @@ jobs:
       - uses: hashicorp/setup-terraform@v3
       - run: terraform init
       - run: terraform workspace select dev || terraform workspace new dev
-      - run: terraform plan -var-file="dev.tfvars"
+      - run: terraform plan -var-file="dev.tfvars" -out=tfplan
+      - uses: actions/upload-artifact@v4
+        with:
+          name: tfplan-dev
+          path: tfplan
 
   plan-staging:
     needs: plan-dev
@@ -28,12 +32,16 @@ jobs:
       - uses: hashicorp/setup-terraform@v3
       - run: terraform init
       - run: terraform workspace select staging || terraform workspace new staging
-      - run: terraform plan -var-file="staging.tfvars"
+      - run: terraform plan -var-file="staging.tfvars" -out=tfplan
+      - uses: actions/upload-artifact@v4
+        with:
+          name: tfplan-staging
+          path: tfplan
 
   plan-prod:
     needs: plan-staging
     runs-on: ubuntu-latest
-    environment: production        # <-- manual approval gate
+    environment: production
     env:
       AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
       AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
@@ -42,4 +50,8 @@ jobs:
       - uses: hashicorp/setup-terraform@v3
       - run: terraform init
       - run: terraform workspace select prod || terraform workspace new prod
-      - run: terraform plan -var-file="prod.tfvars"
+      - run: terraform plan -var-file="prod.tfvars" -out=tfplan
+      - uses: actions/upload-artifact@v4
+        with:
+          name: tfplan-prod
+          path: tfplan
